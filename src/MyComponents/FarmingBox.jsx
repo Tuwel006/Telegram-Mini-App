@@ -25,7 +25,7 @@ function FarmingBox({onClaim, levelUpdate}) {
         clearInterval(interval);
       }
       return () => clearInterval(interval);
-    }, [farming, points]);
+    }, [farming, points, loading]);
   
     const handleClick = () => {
       setFarming(false);
