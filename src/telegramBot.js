@@ -12,14 +12,15 @@ const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
 // Initialize the Telegram bot
-const botToken = 'YOUR_TELEGRAM_BOT_TOKEN';
+const botToken = '7333557545:AAHib4LGriFw5XjeX9U-hWa_AK-MzAWs6Bk';
 const bot = new TelegramBot(botToken, { polling: true });
 
 bot.onText(/\/start/, async (msg) => {
   const telegramID = msg.from.id;
   const userName = encodeURIComponent(msg.from.first_name || 'Unknown');
-  
+
   try {
+    const date = new Date();
     // Check if the user already exists in Firebase
     const userRef = ref(database, 'markCoinMining/' + telegramID);
     const snapshot = await get(userRef);
@@ -38,9 +39,13 @@ bot.onText(/\/start/, async (msg) => {
         telegramID,
         name: userName,
         token,
-        coin: '0',
-        balance: '0',
-        level: '1'
+        coin: 0,
+        balance: 0,
+        level: 1,
+        startDate: date,
+        dateCount: 0,
+        levelPoints: 0,
+        maxPoints: 100
       };
 
       await set(userRef, newUser);
