@@ -1,0 +1,12 @@
+<Header title={myVar} searchBar ={true} />
+    <Todos toDos = {toDos} onDelet = {onDelet}/>
+    <Footer/>
+
+
+    <button
+        className="mt-4 px-4 py-2 bg-blue-500 text-white"
+        onClick={incrementPoints}
+      >
+        Add Points
+      </button>
+    </div>
