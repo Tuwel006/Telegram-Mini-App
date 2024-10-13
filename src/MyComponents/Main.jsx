@@ -1,4 +1,3 @@
-
 import task_logo from '../icon/task_logo.png';
 import React, { useState, useEffect } from 'react';
 import dollar_coin from '../icon/dollar-coin.png';
@@ -14,9 +13,12 @@ export default function Main() {
   //max points
   const [maxPoints,setMaxPoints] = useState(100);
   const {user} = useUser();
-  // // const coin = user.coin;
-  // const levelPoints = user.levelPoints;
-  // const level = user.level;
+
+  if(user){
+       const coin = user.coin;
+  const levelPoints = user.levelPoints;
+  const level = user.level;
+  }
 
   const [level, setLevel] = useState(1);
   const [levelPoints,setLevelPoints] = useState(0);
