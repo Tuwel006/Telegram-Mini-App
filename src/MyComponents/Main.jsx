@@ -9,15 +9,20 @@ import FarmingBox from './FarmingBox';
 import { useUser } from '../UserContext';
 export default function Main() {
 
-  // const [level, setLevel] = useState(1);
-  // const [levelPoints,setLevelPoints] = useState(0);
-  // const [points, setPoints] = useState(0);
-  // const [totalPoints, setTotalPoints] = useState(0);
+
 
   //max points
   const [maxPoints,setMaxPoints] = useState(100);
   const {user} = useUser();
-  const {coin, levelPoints, level} = user;
+  // // const coin = user.coin;
+  // const levelPoints = user.levelPoints;
+  // const level = user.level;
+
+  const [level, setLevel] = useState(1);
+  const [levelPoints,setLevelPoints] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [coin, setCoin] = useState(0);
+
 
   // const levelPointsUpdate = (points)=>{
   //   if(levelPoints+points<maxPoints){
@@ -93,12 +98,12 @@ export default function Main() {
             <p className='text-xs' style={{position: 'relative', bottom:'37px'}}>Bonus Dollar</p>
             </div>
         </div>
-
-        {/*LevelBox*/}
+{user?(
+        // {/*LevelBox*/}
         <div className="mt-2 flex items-center justify-center flex-col">
           <div className='flex mb-3'>
           <img alt='dollar_coin' src={dollar_coin} className='' style={{height: '25px', width: '25px',position:'relative',top:'7px'}}></img>
-          <p className='text-3xl'>{coin}</p>
+          <p className='text-3xl'>00</p>
           </div>
       <div className="w-full max-w-sm">
         <div className="h-8 w-full bg-gray-300 rounded overflow-hidden">
@@ -110,18 +115,20 @@ export default function Main() {
         <p className="mt-2 text-center">Level: {level}</p>
         <p className="text-center">Mark Coin: {levelPoints}/{maxPoints}</p>
       </div>     
-    </div>
-
+    </div>)
+:<h1>User Not Found</h1>}
     {/* Air Drop */}
-      <div className='h-full, w-full mt-3 flex items-center justify-center flex-col'>
+{user?(      <div className='h-full, w-full mt-3 flex items-center justify-center flex-col'>
         <img alt='airDrop_logo' src={airDrop_logo} className='animate-bounce' style={{height: '120px', width: '120px',position:'relative',top:'7px'}}></img>
       </div>
-
+):<></>}
+{user?( 
       <div className="text-center bg-gray-800 text-white p-3 pt-0 rounded-md shadow-lg">
       <h1 className="text-2xl font-bold mb-3">Air Drop will Open After....</h1>
       <p className="text-2xl text-blue-500">{timeLeft !== null ? formatTime(timeLeft) : 'Loading...'}</p>
     </div>
-    <FarmingBox/>
+):<></> }
+    {user?(<FarmingBox/>):<></>}
     </div>
     </>
   )
