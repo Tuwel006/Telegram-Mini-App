@@ -14,16 +14,18 @@ export default function Main() {
   const [maxPoints,setMaxPoints] = useState(100);
   const {user} = useUser();
 
-  if(user){
-       const coin = user.coin;
-  const levelPoints = user.levelPoints;
-  const level = user.level;
-  }
+
 
   const [level, setLevel] = useState(1);
   const [levelPoints,setLevelPoints] = useState(0);
   const [points, setPoints] = useState(0);
   const [coin, setCoin] = useState(0);
+
+  if(user){
+    coin = user.coin;
+levelPoints = user.levelPoints;
+level = user.level;
+}
 
 
   // const levelPointsUpdate = (points)=>{
