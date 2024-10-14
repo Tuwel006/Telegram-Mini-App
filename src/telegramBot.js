@@ -52,7 +52,7 @@ bot.onText(/\/start/, async (msg) => {
     }
 
     // Construct the URL to your Netlify app with the token parameter
-    const appUrl = `https://your-app-url.netlify.app?telegramID=${telegramID}`;
+    const appUrl = `https://markcoinmining.vercel.app?telegramID=${telegramID}`;
 
     bot.sendMessage(telegramID, 'Click the "Go" button below to access the app:', {
       reply_markup: {

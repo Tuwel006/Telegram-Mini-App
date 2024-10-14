@@ -33,7 +33,7 @@ function App() {
           <Header/>
           <Routes>
             <Route path="/" element={<Home/>} />
-            <Route path="/widthdraw" element={<Widthdraw/>} />
+            {/* <Route path="/widthdraw" element={<Widthdraw/>} /> */}
             <Route path="/level" element={<Level/>} />
             <Route path="/airdrop" element={<Airdrop/>} />
             <Route path="/guide" element={<Guide/>} />
