@@ -27,9 +27,7 @@ function App() {
   //  )
  // }
 
-useEffect(() => {
-  tele.ready();
-})
+
 
 
   return (
