@@ -12,7 +12,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
 // Initialize the Telegram bot
-const botToken = '7333557545:AAHib4LGriFw5XjeX9U-hWa_AK-MzAWs6Bk';
+const botToken = '7515305256:AAEF4w-ZIUxw-v7be3vRJvejTbakBBkpZDo';
 const bot = new TelegramBot(botToken, { polling: true });
 
 bot.onText(/\/start/, async (msg) => {
@@ -52,7 +52,7 @@ bot.onText(/\/start/, async (msg) => {
     }
 
     // Construct the URL to your Netlify app with the token parameter
-    const appUrl = `https://markcoinmining.vercel.app?telegramID=${telegramID}`;
+    const appUrl = `https://telegram-mini-j7vjhpsxm-sabbirs-projects-23d9d54a.vercel.app/=${telegramID}`;
 
     bot.sendMessage(telegramID, 'Click the "Go" button below to access the app:', {
       reply_markup: {
