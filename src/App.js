@@ -6,12 +6,13 @@ import Guide from './Pages/Guide';
 import Airdrop from './Pages/Airdrop';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './UserContext';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Header from './MyComponents/Header';
 import Footer from './MyComponents/Footer';
 
 
 function App() {
+  const tele = window.Telegram.WebApp;
   // const postData = async (e) => {
   //   e.preventDefault();
   //   const res = await fetch("https://console.firebase.google.com/project/mark-coin-mining/database/mark-coin-mining-default-rtdb/data/~2F/markCoinMining.json",
@@ -25,6 +26,12 @@ function App() {
   //     }
   //  )
  // }
+
+useEffect(() => {
+  tele.ready();
+})
+
+
   return (
       <UserProvider>
         <Router>

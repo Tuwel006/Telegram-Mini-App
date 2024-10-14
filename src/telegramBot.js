@@ -1,5 +1,4 @@
-// telegramBot.js
-const TelegramBot = require('node-telegram-bot-api');
+const { Telegraf } = require('telegraf');
 const crypto = require('crypto');
 const { initializeApp } = require('firebase/app');
 const { getDatabase, ref, get, set } = require('firebase/database');
@@ -11,13 +10,13 @@ import firebaseConfig from './firebaseConfig';
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-// Initialize the Telegram bot
-const botToken = '7315461305:AAHWDkCYx-i3AkjyENfaPYFrc0u3ti_Gybk';
-const bot = new TelegramBot(botToken, { polling: true });
+// Initialize the Telegram bot using Telegraf
+const botToken = '7459072025:AAFmkYKr2sZSUL35KGNMvxSt8F7vh315XYU';
+const bot = new Telegraf(botToken);
 
-bot.onText(/\/start/, async (msg) => {
-  const telegramID = msg.from.id;
-  const userName = encodeURIComponent(msg.from.first_name || 'Unknown');
+bot.start(async (ctx) => {
+  const telegramID = ctx.from.id;
+  const userName = encodeURIComponent(ctx.from.first_name || 'Unknown');
 
   try {
     const date = new Date();
@@ -51,10 +50,11 @@ bot.onText(/\/start/, async (msg) => {
       await set(userRef, newUser);
     }
 
-    // Construct the URL to your Netlify app with the token parameter
-    const appUrl = `https://markcoinmining.vercel.app/=${telegramID}`;
+    // Construct the URL to your app with the token parameter
+    const appUrl = `https://tarbocoin.vercel.app?telegramID=${telegramID}`;
 
-    bot.sendMessage(telegramID, 'Click the "Go" button below to access the app:', {
+    // Send a message to the user with a button to access the app
+    await ctx.reply('Click the "Go" button below to access the app:', {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'Go', url: appUrl }]
@@ -64,6 +64,13 @@ bot.onText(/\/start/, async (msg) => {
 
   } catch (error) {
     console.error('Error while processing the user:', error);
-    bot.sendMessage(telegramID, 'An error occurred. Please try again later.');
+    await ctx.reply('An error occurred. Please try again later.');
   }
 });
+
+// Launch the bot
+bot.launch();
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
