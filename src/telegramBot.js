@@ -12,7 +12,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
 // Initialize the Telegram bot
-const botToken = '7515305256:AAEF4w-ZIUxw-v7be3vRJvejTbakBBkpZDo';
+const botToken = '7315461305:AAHWDkCYx-i3AkjyENfaPYFrc0u3ti_Gybk';
 const bot = new TelegramBot(botToken, { polling: true });
 
 bot.onText(/\/start/, async (msg) => {
