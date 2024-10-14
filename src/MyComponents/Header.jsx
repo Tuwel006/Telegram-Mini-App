@@ -15,7 +15,7 @@ export default function Header() {
               <p className='text-sm'>X Cancel</p>
               <div className='flex'>
               <img alt='user-logo' src={profile_logo} className='' style={{height: '45px', width: '45px'}}></img>
-              <p className='' style={{color: '#5966ff',fontSize: '20px'}}>Mark Coin Mining</p>
+              <p className='' style={{color: '#5966ff',fontSize: '20px'}}>Tarbo Coin</p>
               </div>
               <p>=</p>
             </div>
