@@ -5,18 +5,14 @@ import { ref, push, set, onValue, update } from 'firebase/database';
 
 // Create User Context
 const UserContext = createContext();
-
-export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Retrieve telegramID from the URL parameters
-  const telegramID = new URLSearchParams(window.location.search).get('telegramID');
-
+let telegramID;
+window.onload =  () => {
+  console.log("Window Loading");
+  telegramID = new URLSearchParams(window.location.search).get('telegramID');
   const userRef = ref(database, 'markCoinMining');
     const newUserRef = push(userRef);
     const date = new Date();
-    set(newUserRef, {
+     set(newUserRef, {
       telegramID,
           name: "",
           coin: 0,
@@ -27,6 +23,16 @@ export const UserProvider = ({ children }) => {
           levelPoints: 0,
           maxPoints: 100
     });
+}
+
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Retrieve telegramID from the URL parameters
+  
+  telegramID = new URLSearchParams(window.location.search).get('telegramID');
+  
 
   useEffect(() => {
     if (telegramID) {
