@@ -1,7 +1,15 @@
 // firebase.js
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
-import firebaseConfig from './firebaseConfig';
+const firebaseConfig = {
+    apiKey: "AIzaSyCQ34LxT6g2vnbj2goEyh72ZGGjZ4bmLy4",
+    authDomain: "tarbo-coin.firebaseapp.com",
+    projectId: "tarbo-coin",
+    storageBucket: "tarbo-coin.appspot.com",
+    messagingSenderId: "84221442394",
+    appId: "1:84221442394:web:b60595ea3a8237d89a1b63",
+    databaseURL: "https://console.firebase.google.com/project/tarbo-coin/database/tarbo-coin-default-rtdb/data/~2F",
+  };
 // Your web app's Firebase configuration
 
 
