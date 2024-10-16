@@ -8,7 +8,7 @@ const firebaseConfig = {
     storageBucket: "tarbo-coin.appspot.com",
     messagingSenderId: "84221442394",
     appId: "1:84221442394:web:b60595ea3a8237d89a1b63",
-    databaseURL: "https://console.firebase.google.com/project/tarbo-coin/database/tarbo-coin-default-rtdb/data/~2F",
+    databaseURL: "https://tarbo-coin-default-rtdb.asia-southeast1.firebasedatabase.app/",
   };
 // Your web app's Firebase configuration
 

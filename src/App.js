@@ -9,6 +9,8 @@ import { UserProvider } from './UserContext';
 import React, {useEffect} from 'react';
 import Header from './MyComponents/Header';
 import Footer from './MyComponents/Footer';
+// import { database } from './firebase'; // Import the database reference
+// import { ref, push, set } from 'firebase/database'; // Modular imports for database operations
 
 
 function App() {
@@ -26,6 +28,13 @@ function App() {
   //     }
   //  )
  // }
+
+//  const userRef = ref(database, 'UsersDb');
+//  const newUserRef = push(userRef);
+
+//   await set(newUserRef, newUser);
+
+ // Store the new user data in Firebase
 
 
 
