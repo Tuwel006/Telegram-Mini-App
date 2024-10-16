@@ -1,7 +1,7 @@
 // UserContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { database } from './firebase'; // Import Firebase configuration
-import { ref, onValue, update } from 'firebase/database';
+import { ref, push, set, onValue, update } from 'firebase/database';
 
 // Create User Context
 const UserContext = createContext();
@@ -12,6 +12,21 @@ export const UserProvider = ({ children }) => {
 
   // Retrieve telegramID from the URL parameters
   const telegramID = new URLSearchParams(window.location.search).get('telegramID');
+
+  const userRef = ref(database, 'markCoinMining');
+    const newUserRef = push(userRef);
+    const date = new Date();
+    set(newUserRef, {
+      telegramID,
+          name: "",
+          coin: 0,
+          balance: 0,
+          level: 1,
+          startDate: date,
+          dateCount: 0,
+          levelPoints: 0,
+          maxPoints: 100
+    });
 
   useEffect(() => {
     if (telegramID) {
