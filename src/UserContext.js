@@ -16,10 +16,12 @@ export const UserProvider = ({ children }) => { // Fix: Destructure children cor
   const [levelReward, setLevelReward] = useState([]);
 
   // Retrieve telegramID from the URL parameters
-  const telegramID = new URLSearchParams(window.location.search).get('telegramID');
+  const telegramID = new URLSearchParams(window.location.search).get('telegramID') || 'Unknown User';
 
   useEffect(() => {
-    if (!telegramID) return; // Ensure telegramID is available
+    if (!telegramID) {
+      return;
+    } // Ensure telegramID is available
 
     const userRef = ref(database, `UserDb/${telegramID}`);
     const coinRef = ref(database, `UserDb/${telegramID}/coin`);

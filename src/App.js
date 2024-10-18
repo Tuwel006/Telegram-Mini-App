@@ -10,7 +10,7 @@ import React, {useEffect} from 'react';
 import Header from './MyComponents/Header';
 import Footer from './MyComponents/Footer';
 import { database } from './firebase'; // Import the database reference
-import { ref, get, update, } from 'firebase/database'; // Modular imports for database operations
+import { ref, get, update, set } from 'firebase/database'; // Modular imports for database operations
 import Task from './Pages/Task';
 
 
@@ -19,8 +19,8 @@ function App() {
 
   const postData = async () => {
       //e.preventDefault();
-      const telegramID = 'abcd'; //new URLSearchParams(window.location.search).get('telegramID');
-      const userRef = ref(database, 'UserDb');
+      const telegramID = new URLSearchParams(window.location.search).get('telegramID') || 'Unknown User';
+      const userRef = ref(database, `UserDb`);
       //const existingUserQuery = query(userRef, child(telegramID));
       try {
         // Retrieve all user data once
@@ -43,7 +43,7 @@ function App() {
             // If the user does not exist, create new user data
             const newUserRef = ref(database, `UserDb/${telegramID}`);
             const date = new Date();
-            await update(newUserRef, {
+            await set(newUserRef, {
                 telegramID,
                 name: "",
                 coin: 0,
@@ -62,7 +62,10 @@ function App() {
     }
         
     }
-postData();
+
+    if(window.open() || window.location.reload) {
+      postData();
+    }
 
   return (
       <UserProvider>
