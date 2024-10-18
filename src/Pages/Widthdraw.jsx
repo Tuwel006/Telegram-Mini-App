@@ -1,13 +1,14 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import Footer from '../MyComponents/Footer'
 import Main from '../MyComponents/Main'
 import closeLock from '../icon/closeLock.png'
-import { useUser } from '../UserContext'
+import { UserContext, UserProvider } from '../UserContext.js'
 
 
 export default function Widthdraw() {
-  const {user} = useUser()
+  const user = useContext(UserContext);
   return (
+    <UserProvider>
         <div className='flex flex-col items-center mt-3 pt-3 h-full w-full bg-gray-800 border-t-4 border-yellow-300 rounded-tl-3xl rounded-tr-3xl'>
           <div className='flex flex-col items-center bg-slate-700 py-4 rounded-3xl w-full'>
           <div className='flex shadow-3xl mb-4'>
@@ -20,5 +21,6 @@ export default function Widthdraw() {
           </button>
           </div>
         </div>
+        </UserProvider>
   )
 }

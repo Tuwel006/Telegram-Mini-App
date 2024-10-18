@@ -1,14 +1,14 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import PropTypes from 'prop-types'
 import profile_logo from '../icon/profile_logo.png';
 import user_logo from '../icon/user_logo.webp';
 import dollar_sign from '../icon/dolar_sign.png';
-import { useUser } from '../UserContext';
+import { UserProvider, UserContext } from '../UserContext';
 
 export default function Header() {
-  const {user} = useUser();
+  const user = useContext(UserContext);
   return (
-    <>
+    <UserProvider>
         <div className="px-2 z-10 bg-black" style={{height: '125px'}}>
           <div className="flex flex-col justify-center space-x-2 pt-2">
             <div className='flex justify-between items-center' style={{height: '38px'}}>
@@ -37,7 +37,7 @@ export default function Header() {
             </div>
           
         </div>
-    </>
+    </UserProvider>
   )
 
 }

@@ -1,80 +1,149 @@
 // UserContext.js
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { database } from './firebase'; // Import Firebase configuration
-import { ref, push, set, onValue, update } from 'firebase/database';
+import { ref, onValue, runTransaction, get, set, push, update } from 'firebase/database';
 
 // Create User Context
-const UserContext = createContext();
-let telegramID;
-window.onload =  () => {
-  console.log("Window Loading");
-  telegramID = new URLSearchParams(window.location.search).get('telegramID');
-  const userRef = ref(database, 'markCoinMining');
-    const newUserRef = push(userRef);
-    const date = new Date();
-     set(newUserRef, {
-      telegramID,
-          name: "",
-          coin: 0,
-          balance: 0,
-          level: 1,
-          startDate: date,
-          dateCount: 0,
-          levelPoints: 0,
-          maxPoints: 100
-    });
-}
+export const UserContext = createContext();
 
-export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+export const UserProvider = ({ children }) => { // Fix: Destructure children correctly
+  const [coin, setCoins] = useState(0);
+  const [balance, setBalance] = useState(0);
+  const [name, setName] = useState("Sabbir Ali");
+  const [level, setLevel] = useState(1);
+  const [levelPoints, setLevelPoints] = useState(0);
+  const [maxPoints, setMaxPoints] = useState(100);
+  const [levelReward, setLevelReward] = useState([]);
 
   // Retrieve telegramID from the URL parameters
-  
-  telegramID = new URLSearchParams(window.location.search).get('telegramID');
-  
+  const telegramID = new URLSearchParams(window.location.search).get('telegramID');
 
   useEffect(() => {
-    if (telegramID) {
-      const userRef = ref(database, 'markCoinMining/' + telegramID);
+    if (!telegramID) return; // Ensure telegramID is available
 
-      // Listen for changes in user data
-      const unsubscribe = onValue(userRef, (snapshot) => {
-        if (snapshot.exists()) {
-          setUser(snapshot.val());
-        }
-        setLoading(false);
-      });
+    const userRef = ref(database, `UserDb/${telegramID}`);
+    const coinRef = ref(database, `UserDb/${telegramID}/coin`);
+    const balanceRef = ref(database, `UserDb/${telegramID}/balance`);
+    const nameRef = ref(database, `UserDb/${telegramID}/name`);
+    const levelRef = ref(database, `UserDb/${telegramID}/level`);
+    const levelPointsRef = ref(database, `UserDb/${telegramID}/levelPoints`);
+    const maxPointsRef = ref(database, `UserDb/${telegramID}/maxPoints`);
+    const levelRewardRef = ref(database, `UserDb/${telegramID}/levelReward`);
 
-      return () => unsubscribe(); // Cleanup listener on unmount
-    }
-  }, [telegramID]);
+
+    // Set up real-time listeners
+    const unsubscribeCoin = onValue(coinRef, (snapshot) => {
+      setCoins(snapshot.val() || 0);
+    });
+
+    const unsubscribeBalance = onValue(balanceRef, (snapshot) => {
+      setBalance(snapshot.val() || 0);
+    });
+
+    const unsubscribeName = onValue(nameRef, (snapshot) => {
+      setName(snapshot.val() || "User");
+    });
+
+    const unsubscribeLevel = onValue(levelRef, (snapshot) => {
+      setLevel(snapshot.val() || 1);
+    });
+
+    const unsubscribeLevelPoints = onValue(levelPointsRef, (snapshot) => {
+      setLevelPoints(snapshot.val() || 0);
+    });
+    const unsubscribemaxPoints = onValue(maxPointsRef, (snapshot) => {
+      setMaxPoints(snapshot.val() || 0);
+    });
+    const unsubscribeLevelReward = onValue(levelRewardRef, (snapshot) => {
+      setLevelReward(snapshot.val() || 0);
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      unsubscribeCoin();
+      unsubscribeBalance();
+      unsubscribeName();
+      unsubscribeLevel();
+      unsubscribeLevelPoints();
+      unsubscribemaxPoints();
+      unsubscribeLevelReward();
+    };
+  }, [telegramID]); // Add telegramID to the dependency array
+  
+  const updateBalance = async (addBalance) => {
+    const balanceRef = ref(database, `UserDb/${telegramID}/balance`);
+    runTransaction(balanceRef, (currBalance) => {
+      return (currBalance || 0) + addBalance;
+    })
+
+  }
+
+  const updateLevelCheck = async (index) => {
+    const updatelevelRewardRef = ref(database, `UserDb/${telegramID}/levelReward/${index}`);
+    set(updatelevelRewardRef,false)
+  }
 
   const updateCoins = async (addCoin) => {
-    if (user) {
-      const userRef = ref(database, 'markCoinMining/' + telegramID);
-      if (parseInt(user.levelPoints) + addCoin > parseFloat(user.maxPoints)) {
-        await update(userRef, {
-          coin: parseInt(user.coin) + addCoin,
-          levelPoints: parseInt(user.levelPoints) + addCoin - parseInt(user.maxPoints),
-          level: parseInt(user.level) + 1,
-          maxPoints: parseInt(user.maxPoints) + 10 * parseInt(user.level),
-        });
-      } else {
-        await update(userRef, {
-          coin: parseInt(user.coin) + addCoin,
-          levelPoints: parseInt(user.levelPoints) + addCoin,
-        });
-      }
+    
+    if (!telegramID) return;
+    const coinRef = ref(database, `UserDb/${telegramID}/coin`);
+    const levelPointsRef = ref(database, `UserDb/${telegramID}/levelPoints`);
+    const levelRef = ref(database, `UserDb/${telegramID}/level`);
+    const maxPointsRef = ref(database, `UserDb/${telegramID}/maxPoints`);
+
+    const coinVal = (await get(coinRef)).val();
+    runTransaction(coinRef, (currentCoins) => {
+      return (currentCoins || 0) + addCoin;
+    });
+    
+    const levelPointsVal = (await get(levelPointsRef)).val();
+    const maxPointsVal = (await get(maxPointsRef)).val();
+    if(levelPointsVal+addCoin>maxPointsVal) {
+      runTransaction(levelPointsRef, (currLevelPoints) => {
+        return (currLevelPoints || 0) + addCoin - maxPointsVal;
+      })
+      let levelVal;
+      runTransaction(levelRef, (currLevel) => {
+        const levelRewardRef = ref(database, `UserDb/${telegramID}/levelReward/${currLevel-1}`);
+
+        levelVal = currLevel;
+        set(levelRewardRef,true);
+        return currLevel+1;
+      })
+      runTransaction(maxPointsRef, (currMaxPoints) => {
+        return currMaxPoints+levelVal*10;
+      })
     }
+    else{
+      runTransaction(levelPointsRef, (currLevelPoints) => {
+        return (currLevelPoints || 0) + addCoin;
+        
+      })
+    }
+  //   const nameRef = ref(database, `UserDb/${telegramID}/name`);
+  //   runTransaction(nameRef, async (name) => {
+  //     return (await get(nameRef).val())
+  // })
+    
+  };
+
+  const contextValue = {
+    coin,
+    balance,
+    name,
+    level,
+    levelPoints,
+    maxPoints,
+    levelReward,
+    updateCoins,
+    updateBalance,
+    updateLevelCheck,
   };
 
   return (
-    <UserContext.Provider value={{ user, loading, updateCoins }}>
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   );
 };
 
-// Custom hook to use the UserContext
-export const useUser = () => useContext(UserContext);

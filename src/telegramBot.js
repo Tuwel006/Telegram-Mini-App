@@ -11,36 +11,22 @@ const botToken = '7459072025:AAFmkYKr2sZSUL35KGNMvxSt8F7vh315XYU';
 const bot = new Telegraf(botToken);
 
 bot.start(async (ctx) => {
-  const telegramID = ctx.from.id;
+  const user = ctx.from;
   const userName = encodeURIComponent(ctx.from.first_name || 'Unknown');
+  const lastName = encodeURIComponent(ctx.from.last_name || "Unknown");
 console.log("user name: "+userName);
      try {
     // Construct the URL to your app with the token parameter
-    appUrl = `https://tarbocoin.vercel.app?telegramID=${telegramID}`;
+    appUrl = `https://tarbocoin.vercel.app?telegramID=${userName} ${lastName}`;
 
     // Send a message to the user with a button to access the app
-    await ctx.reply(`Hello, ${userName} Click the "Go" button below to access the app:`, {
+    await ctx.reply(`Hello, ${userName} ${lastName} Click the "Go" button below to access the app:`, {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'Go', web_app:{url: appUrl}}]
         ]
       }
     });
-    const date = new Date();
-
-      // if(telegramID){
-      //   newUser = {
-      //     telegramID,
-      //     name: userName,
-      //     coin: 0,
-      //     balance: 0,
-      //     level: 1,
-      //     startDate: date,
-      //     dateCount: 0,
-      //     levelPoints: 0,
-      //     maxPoints: 100
-      //   }
-      // }
 
   } catch (error) {
     console.error('Error while processing the user:', error);

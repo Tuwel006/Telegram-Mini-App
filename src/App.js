@@ -9,35 +9,60 @@ import { UserProvider } from './UserContext';
 import React, {useEffect} from 'react';
 import Header from './MyComponents/Header';
 import Footer from './MyComponents/Footer';
-// import { database } from './firebase'; // Import the database reference
-// import { ref, push, set } from 'firebase/database'; // Modular imports for database operations
+import { database } from './firebase'; // Import the database reference
+import { ref, get, update, } from 'firebase/database'; // Modular imports for database operations
+import Task from './Pages/Task';
 
 
 function App() {
   const tele = window.Telegram.WebApp;
-  // const postData = async (e) => {
-  //   e.preventDefault();
-  //   const res = await fetch("https://console.firebase.google.com/project/mark-coin-mining/database/mark-coin-mining-default-rtdb/data/~2F/markCoinMining.json",
-  //     {method: 'POST',
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         //Data Post to DB
-  //       })
-  //     }
-  //  )
- // }
 
-//  const userRef = ref(database, 'UsersDb');
-//  const newUserRef = push(userRef);
+  const postData = async () => {
+      //e.preventDefault();
+      const telegramID = 'abcd'; //new URLSearchParams(window.location.search).get('telegramID');
+      const userRef = ref(database, 'UserDb');
+      //const existingUserQuery = query(userRef, child(telegramID));
+      try {
+        // Retrieve all user data once
+        const snapshot = await get(userRef);
+        let userExists = false;
 
-//   await set(newUserRef, newUser);
+        // Check if the snapshot has data and find the telegramID
+        if (snapshot.exists()) {
+            snapshot.forEach((childSnapshot) => {
+                const userData = childSnapshot.val();
+                if (userData.telegramID === telegramID) {
+                    userExists = true; // User exists
+                }
+            });
+        }
 
- // Store the new user data in Firebase
-
-
-
+        if (userExists) {
+            console.log("User data already exists. No action taken.");
+        } else {
+            // If the user does not exist, create new user data
+            const newUserRef = ref(database, `UserDb/${telegramID}`);
+            const date = new Date();
+            await update(newUserRef, {
+                telegramID,
+                name: "",
+                coin: 0,
+                balance: 0,
+                level: 1,
+                startDate: date.toISOString(), // Store date in ISO format
+                dateCount: 0,
+                levelPoints: 0,
+                maxPoints: 100,
+                levelReward: [],
+            });
+            console.log("New user data stored successfully.");
+        }
+    } catch (error) {
+        console.error("Error checking user data:", error);
+    }
+        
+    }
+postData();
 
   return (
       <UserProvider>
@@ -47,10 +72,12 @@ function App() {
           <Header/>
           <Routes>
             <Route path="/" element={<Home/>} />
-            {/* <Route path="/widthdraw" element={<Widthdraw/>} /> */}
+            <Route path="/widthdraw" element={<Widthdraw/>} />
             <Route path="/level" element={<Level/>} />
             <Route path="/airdrop" element={<Airdrop/>} />
             <Route path="/guide" element={<Guide/>} />
+            <Route path="/Task" element={<Task/>} />
+
           </Routes>
           <Footer/>
         </div>

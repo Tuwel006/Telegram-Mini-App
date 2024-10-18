@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './components.css';
-import { useUser } from '../UserContext';
+import { UserContext, UserProvider } from '../UserContext';
 // import { update } from 'firebase/database';
 
 
@@ -13,7 +13,7 @@ function FarmingBox({onClaim, levelUpdate}) {
     const duration = 2//60*60*8+1200; // 180 minutes in seconds
     const increment = 1;
 
-    const {updateCoins} = useUser();
+    const {updateCoins} = useContext(UserContext);
   
     useEffect(() => {
       let interval = null;
@@ -49,6 +49,7 @@ function FarmingBox({onClaim, levelUpdate}) {
     };
 
   return (
+    <UserProvider>
     <div className="flex flex-col items-center justify-center">
         
       <div className="rounded-lg bg-white w-96 h-16 border border-gray-400 relative">
@@ -91,6 +92,7 @@ function FarmingBox({onClaim, levelUpdate}) {
         </p>
       </div>
     </div>
+    </UserProvider>
   );
 }
 
